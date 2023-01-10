@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AoE2Clan": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
