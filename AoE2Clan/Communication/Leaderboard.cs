@@ -11,7 +11,7 @@ namespace AoE2Clan.DB
     {
         private static string urlParameters = "?leaderboard_id=3&search=";
         private static string urlParameters2 = "?leaderboard_id=4&search=";
-        private CommunicationApi communicationApi = new CommunicationApi();
+        private readonly CommunicationApi communicationApi = new CommunicationApi();
 
         public string getLeaderBoardInfo(bool isRankTG, string ClanToCheck)
         {
@@ -51,9 +51,8 @@ namespace AoE2Clan.DB
                             onlineInfoList.Add(result.Result);
                         }
                     }
-                    catch (AggregateException AggregateException)
+                    catch
                     {
-                        continue;
                     }
                 }
 

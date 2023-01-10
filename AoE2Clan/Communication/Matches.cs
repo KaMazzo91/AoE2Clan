@@ -12,7 +12,9 @@ namespace AoE2Clan.DB
     {
         private static string lastMatchParameters = "?game=aoe2de&profile_id=";
         private static string urlParameters2 = "?leaderboard_id=4&search=";
-        private CommunicationApi communicationApi = new CommunicationApi();
+
+        private const int MaxSecondsGameStarted = 2400;
+        private readonly CommunicationApi communicationApi = new CommunicationApi();
         public string getInGameInfo(string ClanToCheck)
         {
             string urlToCheck = urlParameters2;
@@ -28,7 +30,6 @@ namespace AoE2Clan.DB
                 {
                     if (communicationApi.checkClan(ClanToCheck, singleUser["clan"].ToString(), singleUser["name"].ToString()))
                     {
-                        string SteamID = singleUser["steam_id"].ToString();
                         string ProfileID = singleUser["profile_id"].ToString();
 
                         dynamic obj2 = communicationApi.GetDataFromAPI(requestType.matches, lastMatchParameters + ProfileID + "&start=0");
@@ -40,12 +41,12 @@ namespace AoE2Clan.DB
 
                             string playerId = ProfileID;
 
-                            if (jsonArray.Count() > 0 && jsonArray[0]["finished"] == null)
+                            if (jsonArray.Any() && jsonArray[0]["finished"] == null)
                             {
                                 DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                                 startDate = startDate.AddSeconds((double)jsonArray[0]["started"]);
 
-                                if ((DateTime.Now - startDate.ToLocalTime()).TotalSeconds < 2400)
+                                if ((DateTime.Now - startDate.ToLocalTime()).TotalSeconds < MaxSecondsGameStarted)
                                 {
                                     if (!UserCheked.Any(s => s == playerId))
                                     {
@@ -107,14 +108,14 @@ namespace AoE2Clan.DB
                                                 {
                                                     if (obj3.FirstOrDefault() != null)
                                                     {
-                                                        int GameWonS = Convert.ToInt32(obj3.FirstOrDefault()["num_wins"]);
-                                                        int GameLostS = Convert.ToInt32(obj3.FirstOrDefault()["num_losses"]);
+                                                        int GameWonS = Convert.ToInt32(obj3?.FirstOrDefault()["num_wins"]);
+                                                        int GameLostS = Convert.ToInt32(obj3?.FirstOrDefault()["num_losses"]);
 
                                                         if (((GameWonS + GameLostS) >= 10))
                                                         {
                                                             if (GameWonS > 0)
                                                             {
-                                                                decimal playerWinRateS = (100 * GameWonS) / (GameWonS + GameLostS);
+                                                                decimal playerWinRateS = (decimal)(100 * GameWonS) / (GameWonS + GameLostS);
                                                                 if ((GameWonS + GameLostS) <= 100 && playerWinRateS >= 70)
                                                                 {
                                                                     playerSmurfAlert = true;
@@ -164,7 +165,7 @@ namespace AoE2Clan.DB
                                                         {
                                                             if (GameWonS2 > 0)
                                                             {
-                                                                decimal playerWinRateS2 = (100 * GameWonS2) / (GameWonS2 + GameLostS2);
+                                                                decimal playerWinRateS2 = (decimal)(100 * GameWonS2) / (GameWonS2 + GameLostS2);
                                                                 if ((GameWonS2 + GameLostS2) <= 100 && playerWinRateS2 >= 70)
                                                                 {
                                                                     playerSmurfAlert = true;
@@ -276,7 +277,7 @@ namespace AoE2Clan.DB
                                                         {
                                                             if (GameWon > 0)
                                                             {
-                                                                decimal playerWinRate = (100 * GameWon) / (GameWon + GameLost);
+                                                                decimal playerWinRate = (decimal)(100 * GameWon) / (GameWon + GameLost);
                                                                 WinRateTot += Math.Round(playerWinRate, 2);
 
                                                                 if ((GameWon + GameLost) <= 100 && playerWinRate >= 70)
