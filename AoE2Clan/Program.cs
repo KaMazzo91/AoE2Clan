@@ -140,39 +140,9 @@ namespace AoE2Clan
                     _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode("Clan not setted"));
                 }
             }
-            else if (messageToCheck == "JOIN") //deprecato dal cambio di API di AOE2.NET
+            else if (messageToCheck == "JOIN")
             {
-                //if (ClanToCheck != null && ClanToCheck != "")
-                //{
-                //    HttpClient client = new HttpClient();
-                //    client.BaseAddress = new Uri(urlPrivateLobbies);
-                //    client.DefaultRequestHeaders.Accept.Add(
-                //    new MediaTypeWithQualityHeaderValue("application/json"));
-
-                //    HttpResponseMessage response = client.GetAsync("?game=aoe2de").Result;
-                //    if (response.IsSuccessStatusCode)
-                //    {
-                //        var resultData = response.Content.ReadAsStringAsync().Result;
-                //        var allLobbie = JArray.Parse(resultData);
-
-                //        string lobbieCode = "No lobbie found with name: " + ClanToCheck + " lobbie";
-
-                //        foreach (var lobbie in allLobbie)
-                //        {
-                //            if (lobbie["name"].ToString().ToUpper().Contains((ClanToCheck + " lobbie").ToUpper()))
-                //            {
-                //                lobbieCode = "aoe2de:/0/" + lobbie["match_id"].ToString();
-                //                break;
-                //            }
-                //        }
-
-                //        Bot.SendTextMessageAsync(id, System.Web.HttpUtility.UrlDecode(lobbieCode));
-                //    }
-                //}
-                //else
-                //{
-                //    Bot.SendTextMessageAsync(id, System.Web.HttpUtility.UrlDecode("Before starting, use the setclan command followed by the clan you belong to (e.g. setclan GdR)"));
-                //}
+                //deprecato dal cambio di API di AOE2.NET
             }
             else if (messageToCheck == "PRESCIT")
             {

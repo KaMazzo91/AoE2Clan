@@ -119,3 +119,36 @@ namespace AoE2Clan.Communication
         matches = 3
     }
 }
+
+//Deprecato il metodo Join
+//if (ClanToCheck != null && ClanToCheck != "")
+//{
+//    HttpClient client = new HttpClient();
+//    client.BaseAddress = new Uri(urlPrivateLobbies);
+//    client.DefaultRequestHeaders.Accept.Add(
+//    new MediaTypeWithQualityHeaderValue("application/json"));
+
+//    HttpResponseMessage response = client.GetAsync("?game=aoe2de").Result;
+//    if (response.IsSuccessStatusCode)
+//    {
+//        var resultData = response.Content.ReadAsStringAsync().Result;
+//        var allLobbie = JArray.Parse(resultData);
+
+//        string lobbieCode = "No lobbie found with name: " + ClanToCheck + " lobbie";
+
+//        foreach (var lobbie in allLobbie)
+//        {
+//            if (lobbie["name"].ToString().ToUpper().Contains((ClanToCheck + " lobbie").ToUpper()))
+//            {
+//                lobbieCode = "aoe2de:/0/" + lobbie["match_id"].ToString();
+//                break;
+//            }
+//        }
+
+//        Bot.SendTextMessageAsync(id, System.Web.HttpUtility.UrlDecode(lobbieCode));
+//    }
+//}
+//else
+//{
+//    Bot.SendTextMessageAsync(id, System.Web.HttpUtility.UrlDecode("Before starting, use the setclan command followed by the clan you belong to (e.g. setclan GdR)"));
+//}
