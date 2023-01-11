@@ -8,7 +8,6 @@ using System.Threading;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 
-
 namespace AoE2Clan
 {
     class Program
@@ -17,7 +16,7 @@ namespace AoE2Clan
 
         private const bool ErrorAOE2 = false;
         static ClanInfo ClanInfo = new ClanInfo();
-
+        static Leaderboard leaderboard = new Leaderboard();
         static void Main(string[] args)
         {
             ClanInfo.DbSetup();
@@ -83,7 +82,6 @@ namespace AoE2Clan
             {
                 if (ClanToCheck != "")
                 {
-                    Leaderboard leaderboard = new Leaderboard();
                     string message = leaderboard.getLeaderBoardInfo(messageToCheck == "RANKTG", ClanToCheck);
                     _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(message));
                 }

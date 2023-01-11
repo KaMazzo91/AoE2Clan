@@ -26,6 +26,7 @@ namespace AoE2Clan.DB
             {
                 var allUser = ((Newtonsoft.Json.Linq.JArray)obj.leaderboard);
 
+                Dictionary<int, string> MapType = new Dictionary<int, string>();
                 List<string> UserCheked = new List<string>();
                 bool gameNotFound = true;
                 foreach (var singleUser in allUser)
@@ -50,10 +51,16 @@ namespace AoE2Clan.DB
 
                                 if ((DateTime.Now - startDate.ToLocalTime()).TotalSeconds < MaxSecondsGameStarted)
                                 {
+
+                                    if (!MapType.Any())
+                                    {
+                                        MapType = communicationApi.GetMapTypeList();
+                                    }
+
                                     if (!UserCheked.Any(s => s == playerId))
                                     {
                                         var players = jsonArray[0]["players"];
-                                        message += getGameType(Convert.ToInt32(jsonArray[0]["rating_type_id"])) + ": <b>aoe2de:/1/" + jsonArray[0]["match_id"].ToString() + "</b>\n\n";
+                                        message += "<b>" + getGameType(Convert.ToInt32(jsonArray[0]["rating_type_id"])) + ": aoe2de:/1/" + jsonArray[0]["match_id"].ToString() + "</b>\n\n";
 
                                         int team = 1;
                                         bool firsttimeTeamMinus = true;
@@ -302,6 +309,13 @@ namespace AoE2Clan.DB
                                         catch { }
                                         finally { countPlayer = 0; }
 
+                                        try
+                                        {
+                                            message += "\n\nMap: " + MapType[Convert.ToInt32(jsonArray[0]["map_type"])];
+                                            message += "\nStarted at: " + startDate.ToLocalTime().ToString("HH:mm");
+                                        }
+                                        catch { }
+                                         
                                         gameNotFound = false;
                                         _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(message), ParseMode.Html);
                                     }

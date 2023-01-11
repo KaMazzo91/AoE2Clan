@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -108,8 +109,20 @@ namespace AoE2Clan.Communication
 
             return onlineInfo;
         }
-    }
 
+        public Dictionary<int, string> GetMapTypeList()
+        {
+            Dictionary<int, string> mapType = new Dictionary<int, string>();
+            var PropertyList = GetDataFromAPI(requestType.genericData, "?game=aoe2de&language=en");
+
+            foreach (var map in PropertyList["map_type"])
+            {
+                mapType[Convert.ToInt32(map["id"])] = (string)map["string"];
+            }
+
+            return mapType;
+        }
+    }
 
     enum requestType
     {
