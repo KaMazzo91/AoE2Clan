@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 
 namespace AoE2Clan.DB
 {
@@ -15,7 +17,7 @@ namespace AoE2Clan.DB
 
         private const int MaxSecondsGameStarted = 2400;
         private readonly CommunicationApi communicationApi = new CommunicationApi();
-        public string getInGameInfo(string ClanToCheck)
+        public void getInGameInfo(string ClanToCheck, TelegramBotClient Bot, long idGroup)
         {
             string urlToCheck = urlParameters2;
             dynamic obj = communicationApi.GetDataFromAPI(requestType.leaderboard, urlToCheck + ClanToCheck + "&count=10000");
@@ -301,7 +303,7 @@ namespace AoE2Clan.DB
                                         finally { countPlayer = 0; }
 
                                         gameNotFound = false;
-                                        return message;
+                                        _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(message), ParseMode.Html);
                                     }
                                 }
                             }
@@ -312,15 +314,13 @@ namespace AoE2Clan.DB
 
                 if (gameNotFound)
                 {
-                    return "No one is in game!";
+                    _=Bot.SendTextMessageAsync(idGroup, "No one is in game!");
                 }
                 else
                 {
-                    return "End";
+                    _=Bot.SendTextMessageAsync(idGroup, "End");
                 }
             }
-
-            return "";
         }
 
         private static string getColor(int colorId)

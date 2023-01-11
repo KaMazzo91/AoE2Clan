@@ -97,8 +97,7 @@ namespace AoE2Clan
                 if (ClanToCheck != null && ClanToCheck != "")
                 {
                     Matches matches = new Matches();
-                    string message = matches.getInGameInfo(ClanToCheck);
-                    _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(message), ParseMode.Html);
+                    matches.getInGameInfo(ClanToCheck, Bot, idGroup);
                 }
                 else
                 {
@@ -127,17 +126,17 @@ namespace AoE2Clan
 
                     ClanInfo.insertClanInfo(ClanName, idGroup);
 
-                    _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode("Clan setted"));
+                    _=Bot.SendTextMessageAsync(idGroup, "Clan setted");
                     _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(message));
                 }
                 else if (ClanName != "" && ClanToCheck == ClanName)
                 {
-                    _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode("Clan setted"));
+                    _=Bot.SendTextMessageAsync(idGroup, "Clan setted");
                     _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(message));
                 }
                 else
                 {
-                    _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode("Clan not setted"));
+                    _=Bot.SendTextMessageAsync(idGroup, "Clan not setted");
                 }
             }
             else if (messageToCheck == "JOIN")
