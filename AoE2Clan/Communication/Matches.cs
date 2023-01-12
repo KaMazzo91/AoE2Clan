@@ -369,7 +369,7 @@ namespace AoE2Clan.DB
                     playerData += "<b>" + player[0]["name"] + "</b>\n";
                     playerData += "aoe2.net/#aoe2de-profile-" + player[0]["profile_id"].ToString() + "\n";
                     playerData += steamLink;
-                    playerData += GetPlayerRating(2, player[0]["profile_id"].ToString()) + "\n";
+                    playerData += GetPlayerRating(3, player[0]["profile_id"].ToString()) + "\n";
                     playerData += GetPlayerRating(4, player[0]["profile_id"].ToString()) + "\n";
                     playerData += GetPlayerRating(13, player[0]["profile_id"].ToString()) + "\n";
                     playerData += GetPlayerRating(14, player[0]["profile_id"].ToString()) + "\n";
@@ -424,6 +424,12 @@ namespace AoE2Clan.DB
             JArray obj = communicationApi.GetDataFromAPI(requestType.ratinghistory, urlToCheck3);
 
             string rating = "";
+
+            if (gameType == 3)
+            {
+                gameType = 2;
+            }
+
             string message = getGameType(gameType) + ": ";
 
             if (gameType == 2 || gameType == 13)
