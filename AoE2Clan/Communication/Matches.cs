@@ -367,6 +367,35 @@ namespace AoE2Clan.DB
                     playerData += GetPlayerRating(4, player[0]["profile_id"].ToString()) + "\n";
                     playerData += GetPlayerRating(13, player[0]["profile_id"].ToString()) + "\n";
                     playerData += GetPlayerRating(14, player[0]["profile_id"].ToString()) + "\n";
+
+                    dynamic obj2 = communicationApi.GetDataFromAPI(requestType.matches, lastMatchParameters + player[0]["profile_id"].ToString() + "&start=0");
+
+                    if (obj2 != null)
+                    {
+                        JArray jsonArray = obj2;
+
+                        if (jsonArray.Any() && jsonArray[0]["finished"] == null)
+                        {
+                            DateTime startDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            startDate = startDate.AddSeconds((double)jsonArray[0]["started"]);
+
+                            if ((DateTime.Now - startDate.ToLocalTime()).TotalSeconds < MaxSecondsGameStarted)
+                            {
+                                Dictionary<int, string> MapType = new Dictionary<int, string>();
+                                if (!MapType.Any())
+                                {
+                                    MapType = communicationApi.GetMapTypeList();
+                                }
+
+                                playerData += "\n" + MapType[Convert.ToInt32(jsonArray[0]["map_type"])] + " <b>" + getGameType(Convert.ToInt32(jsonArray[0]["rating_type_id"])) + ":\naoe2de:/1/" + jsonArray[0]["match_id"].ToString() + "</b>";
+
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    playerData = "Player not found";
                 }
             }
             else
@@ -388,6 +417,11 @@ namespace AoE2Clan.DB
             if (gameType == 2 || gameType == 13)
             {
                 message += "    ";
+            }
+
+            if(gameType == 14)
+            {
+                message += " ";
             }
 
             decimal playerWinRateS = 0;

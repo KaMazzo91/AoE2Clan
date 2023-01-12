@@ -13,7 +13,7 @@ namespace AoE2Clan
     class Program
     {
         static TelegramBotClient Bot = new TelegramBotClient(Environment.GetEnvironmentVariable("Token"));
-        
+
         private const bool ErrorAOE2 = false;
         static ClanInfo ClanInfo = new ClanInfo();
         static Leaderboard leaderboard = new Leaderboard();
