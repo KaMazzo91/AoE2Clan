@@ -337,6 +337,99 @@ namespace AoE2Clan.DB
             }
         }
 
+        public string getPlayerInfo(string playerName)
+        {
+            string urlToCheck = urlParameters2;
+            dynamic obj = communicationApi.GetDataFromAPI(requestType.leaderboard, urlToCheck + playerName + "&count=1");
+            string playerData = "";
+
+            if (obj != null)
+            {
+                var player = ((Newtonsoft.Json.Linq.JArray)obj.leaderboard);
+                if (player.Any())
+                {
+                    OnlineInfo onlineInfo = communicationApi.GetSteamInfo(player[0]["steam_id"].ToString());
+
+                    if (onlineInfo != null)
+                    {
+                        if (onlineInfo.status)
+                        {
+                            playerData += "🟢" + " ";
+                        }
+                        else
+                        {
+                            playerData += "🔴" + " ";
+                        }
+                    }
+
+                    playerData += "<b>" + player[0]["name"] + "</b>\n\n";
+                    playerData += GetPlayerRating(2, player[0]["profile_id"].ToString()) + "\n";
+                    playerData += GetPlayerRating(4, player[0]["profile_id"].ToString()) + "\n";
+                    playerData += GetPlayerRating(13, player[0]["profile_id"].ToString()) + "\n";
+                    playerData += GetPlayerRating(14, player[0]["profile_id"].ToString()) + "\n";
+                }
+            }
+            else
+            {
+                playerData = "Player not found";
+            }
+
+            return playerData;
+        }
+
+        private string GetPlayerRating(int gameType, string playerId)
+        {
+            string urlToCheck3 = "?game=aoe2de&leaderboard_id=" + gameType + "&profile_id=" + playerId + "&count=1";
+            JArray obj = communicationApi.GetDataFromAPI(requestType.ratinghistory, urlToCheck3);
+
+            string rating = "";
+            string message = getGameType(gameType) + ": ";
+
+            if (gameType == 2 || gameType == 13)
+            {
+                message += "    ";
+            }
+
+            decimal playerWinRateS = 0;
+            if (obj != null)
+            {
+                if (obj.FirstOrDefault() != null)
+                {
+                    int GameWonS = Convert.ToInt32(obj?.FirstOrDefault()["num_wins"]);
+                    int GameLostS = Convert.ToInt32(obj?.FirstOrDefault()["num_losses"]);
+
+                    if (((GameWonS + GameLostS) >= 10))
+                    {
+                        if (GameWonS > 0)
+                        {
+                            playerWinRateS = (decimal)(100 * GameWonS) / (GameWonS + GameLostS);
+                        }
+                    }
+
+                    if (obj.FirstOrDefault()["rating"].ToString() != "")
+                    {
+                        rating += obj.FirstOrDefault()["rating"].ToString();
+                    }
+                    else
+                    {
+                        rating += "none";
+                    }
+                }
+                else
+                {
+                    rating += "none";
+                }
+
+                message += "<b>" + rating + "</b> ";
+                if (playerWinRateS > 0)
+                {
+                    message += "   " + Math.Round(playerWinRateS) + "%";
+                }
+            }
+
+            return message;
+        }
+
         private static string getColor(int colorId)
         {
             switch (colorId)
@@ -369,7 +462,7 @@ namespace AoE2Clan.DB
                 case 0:
                     return "Unranked";
                 case 1:
-                    return "1v1 DM ";
+                    return "1v1 DM";
                 case 2:
                     return "1v1 RM";
                 case 3:

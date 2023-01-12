@@ -85,6 +85,11 @@ namespace AoE2Clan.Communication
 
         public async Task<OnlineInfo> OnlineCheckAsync(string SteamID, string xBoxId = "")
         {
+            return GetSteamInfo(SteamID, xBoxId);
+        }
+
+        public OnlineInfo GetSteamInfo(string SteamID, string xBoxId = "")
+        {
             OnlineInfo onlineInfo = new OnlineInfo();
             onlineInfo.SteamId = SteamID;
             onlineInfo.xBoxId = xBoxId;

@@ -13,10 +13,12 @@ namespace AoE2Clan
     class Program
     {
         static TelegramBotClient Bot = new TelegramBotClient(Environment.GetEnvironmentVariable("Token"));
-
+        
         private const bool ErrorAOE2 = false;
         static ClanInfo ClanInfo = new ClanInfo();
         static Leaderboard leaderboard = new Leaderboard();
+        static Matches matches = new Matches();
+
         static void Main(string[] args)
         {
             ClanInfo.DbSetup();
@@ -58,7 +60,7 @@ namespace AoE2Clan
 
                     bool checkIfCommand = Enum.TryParse(messageToCheck, out allCall);
 
-                    if (messageToCheck.Contains("SETCLAN") || checkIfCommand)
+                    if ((messageToCheck.Contains("SETCLAN") || messageToCheck.Contains("GETPLAYER")) || checkIfCommand)
                     {
                         if (checkAoeCommand)
                         {
@@ -94,7 +96,6 @@ namespace AoE2Clan
             {
                 if (ClanToCheck != null && ClanToCheck != "")
                 {
-                    Matches matches = new Matches();
                     matches.getInGameInfo(ClanToCheck, Bot, idGroup);
                 }
                 else
@@ -108,6 +109,7 @@ namespace AoE2Clan
                 message2 += "- Rank (Show the rank of all members of the clan)\n";
                 message2 += "- Ranktg (Show the TG Rank of all members of the clan)\n";
                 message2 += "- Ingame (Show matches and opponents of members belonging to the clan!)\n";
+                message2 += "- Getplayer (get the given player's Elo information)\n";
                 Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(message2));
             }
             else if (messageToCheck.Contains("SETCLAN"))
@@ -116,7 +118,8 @@ namespace AoE2Clan
                 message += "Functionality added to the 'ingame' command: \n";
                 message += "- The belonging clan is remembered despite future updates. (YEEEEE)\n";
                 message += "- the Empire War rating has been added to the 'ingame' command \n";
-
+                message += "- map type and start time added in 'ingame' command \n";
+                message += "- Added the 'Getplayer' command \n";
 
                 string ClanName = messageToCheck.Replace("SETCLAN", "").Trim();
                 if (ClanToCheck != null && ClanName != "" && ClanToCheck != ClanName)
@@ -140,6 +143,12 @@ namespace AoE2Clan
             else if (messageToCheck == "JOIN")
             {
                 //deprecato dal cambio di API di AOE2.NET
+            }
+            else if (messageToCheck.Contains("GETPLAYER"))
+            {
+                string playerName = messageToCheck.Replace("GETPLAYER", "").Trim();
+                string playerInfo = matches.getPlayerInfo(playerName);
+                _=Bot.SendTextMessageAsync(idGroup, System.Web.HttpUtility.UrlDecode(playerInfo), ParseMode.Html);
             }
             else if (messageToCheck == "PRESCIT")
             {
@@ -194,7 +203,8 @@ namespace AoE2Clan
         RANK = 0,
         RANKTG = 1,
         INGAME = 2,
-        JOIN = 3
+        JOIN = 3,
+        GETPLAYER = 4
     }
 
     public enum AllCall
@@ -203,9 +213,10 @@ namespace AoE2Clan
         RANKTG = 1,
         INGAME = 2,
         JOIN = 3,
-        PRESCIT = 4,
-        COMMAND = 5,
-        SETCLAN = 6
+        GETPLAYER = 4,
+        PRESCIT = 5,
+        COMMAND = 6,
+        SETCLAN = 7
     }
 
 }
