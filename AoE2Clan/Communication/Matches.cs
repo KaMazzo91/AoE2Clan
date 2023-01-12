@@ -342,7 +342,7 @@ namespace AoE2Clan.DB
             string urlToCheck = urlParameters2;
             dynamic obj = communicationApi.GetDataFromAPI(requestType.leaderboard, urlToCheck + playerName + "&count=1");
             string playerData = "";
-
+            string steamLink = "";
             if (obj != null)
             {
                 var player = ((Newtonsoft.Json.Linq.JArray)obj.leaderboard);
@@ -360,9 +360,15 @@ namespace AoE2Clan.DB
                         {
                             playerData += "🔴" + " ";
                         }
+
+                        steamLink += "Steam Id: " + player[0]["steam_id"].ToString() + "\n";
                     }
 
-                    playerData += "<b>" + player[0]["name"] + "</b>\n\n";
+                    steamLink += "\n";
+
+                    playerData += "<b>" + player[0]["name"] + "</b>\n";
+                    playerData += "aoe2.net/#aoe2de-profile-" + player[0]["profile_id"].ToString() + "\n";
+                    playerData += steamLink;
                     playerData += GetPlayerRating(2, player[0]["profile_id"].ToString()) + "\n";
                     playerData += GetPlayerRating(4, player[0]["profile_id"].ToString()) + "\n";
                     playerData += GetPlayerRating(13, player[0]["profile_id"].ToString()) + "\n";
@@ -370,6 +376,7 @@ namespace AoE2Clan.DB
 
                     dynamic obj2 = communicationApi.GetDataFromAPI(requestType.matches, lastMatchParameters + player[0]["profile_id"].ToString() + "&start=0");
 
+                    bool InGame = false;
                     if (obj2 != null)
                     {
                         JArray jsonArray = obj2;
@@ -387,10 +394,15 @@ namespace AoE2Clan.DB
                                     MapType = communicationApi.GetMapTypeList();
                                 }
 
+                                InGame = true;
                                 playerData += "\n" + MapType[Convert.ToInt32(jsonArray[0]["map_type"])] + " <b>" + getGameType(Convert.ToInt32(jsonArray[0]["rating_type_id"])) + ":\naoe2de:/1/" + jsonArray[0]["match_id"].ToString() + "</b>";
-
                             }
                         }
+                    }
+
+                    if (!InGame)
+                    {
+                        playerData += "\n Not in game";
                     }
                 }
                 else
