@@ -79,30 +79,35 @@ namespace AoE2Clan.DB
                                             bool skipFirst = false;
                                             bool skipSecond = false;
 
-                                            if (rateTypeId == 1 || rateTypeId == 2)
+                                            switch (rateTypeId)
                                             {
-                                                firstId = 1;
-                                                secondId = 2;
-                                            }
-                                            else if (rateTypeId == 3 || rateTypeId == 4)
-                                            {
-                                                firstId = 3;
-                                                secondId = 4;
-                                            }
-                                            else if (rateTypeId == 13 || rateTypeId == 14)
-                                            {
-                                                firstId = 13;
-                                                secondId = 14;
-                                            }
-                                            else if (rateTypeId == 0)
-                                            {
-                                                firstId = 0;
-                                                skipSecond = true;
-                                            }
-                                            else
-                                            {
-                                                skipFirst = true;
-                                                skipSecond = true;
+                                                case 1:
+                                                case 2:
+                                                    firstId = 1;
+                                                    secondId = 2;
+                                                    break;
+
+                                                case 3:
+                                                case 4:
+                                                    firstId = 3;
+                                                    secondId = 4;
+                                                    break;
+
+                                                case 13:
+                                                case 14:
+                                                    firstId = 13;
+                                                    secondId = 14;
+                                                    break;
+
+                                                case 0:
+                                                    firstId = 0;
+                                                    skipSecond = true;
+                                                    break;
+
+                                                default:
+                                                    skipFirst = true;
+                                                    skipSecond = true;
+                                                    break;
                                             }
 
                                             JArray obj3 = null;

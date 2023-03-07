@@ -67,7 +67,7 @@ namespace AoE2Clan.Communication
 
         public bool checkClan(string ClanToCheck, string ActualName, string userName)
         {
-            if (ClanToCheck.ToUpper() == "GDR" && (userName == "GdR_Scugo's favourite blamed guy" || userName == "GdR_scià"))
+            if (ClanToCheck.ToUpper() == "GDR" && (userName == "GdR_Scugo's favourite blamed guy" || userName == "GdR_scià" || userName == "GdR_Macdek II" || userName == "GdR_Monesi"))
             {
                 return true;
             }
